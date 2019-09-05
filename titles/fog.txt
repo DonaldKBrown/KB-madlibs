@@ -1,0 +1,46 @@
+The Fog
+###~~~###
+Horror
+Sci-Fi
+Fantasy
+###~~~###
+color1=Color
+city=Name of a City
+name1=Man's Name
+plur1=Plural Noun
+plur2=Plural Noun
+month=Month
+strt=Street Name
+name2=Woman's Name
+dist=Unit of Distance
+veh=Type of Vehicle
+noun1=Noun
+plur3=Plural Noun
+verb1=Verb
+ptverb1=Past-tense Verb
+num1=Number
+adj1=Adjective
+color2=Color
+subs=Substance
+sct1=Fragrance
+sct2=Fragrance
+bpart1=Body Part (Plural)
+bpart2=Body Part
+bpart3=Body Part
+color3=Color
+color4=Color
+ingverb1=Verb Ending in -ing
+adv=Adverb
+adj2=Adjective
+adj3=Adjective
+num2=Number
+num3=Number
+adj4=Adjective
+noise=Animal Sound
+num4=Number
+###~~~###
+A thick, {color1} fog had settled in around the town of {city}. As {name1} got into his car, he turned on his {plur1} and adjusted his {plur2} so that he could see. He thought to himself that the fog was too thick for an average {month} here, but he chocked it up to regular old global warming. He pulled out of his driveway and headed down {strt} to his girlfriend {name2}'s house.
+As he drove, the fog got thicker and more {color1} than ever before. After not even a {dist}, he had to pull over and get out. The fog was so thick now that he couldn't even see his {veh} right in front of him. He pulled out his cell-phone and turned on the {noun1}. The light refracted all around with the fog, making it even harder to see. He couldn't hear any other {plur3} on the road, so he began to {verb1} back in the direction he believed he came from.
+{name1} {ptverb1} for about {num1} minutes when the fog finally started to clear. His {noun1} illuminated a path in front of him, but it was no longer the asphalt he was expecting. Instead, a road made of {adj1}, {color2} {subs} that smelled faintly of {sct1} and {sct2} was before him. His {bpart1} sank slightly in with each step that he took, and the smell grew stronger. He tried to turn back, but couldn't because the {subs} was now up to his {bpart2}. Instead, {name1} decided to just stand and wait until the sludge overtook him.
+Before too long, the {subs} was up to his {bpart3}. He had consigned himself to his fate, and wished that he could see {name2} one last time. She was probably wondering where he was. He was wondering where he was. As the sludge crept past his {bpart3} and up his face, he fell through to a chamber below. The walls and floor were made of {color3} bricks, and they were mostly covered by a strange, {color4} moss. The scent he smelled faintly before was stronger than ever, now.
+Soon after he fell, he noticed there was something {ingverb1} {adv} in the corner of the room. Terrified, but still compelled by some unknown force to do so, {name1} turned his {noun1} to see what it was. The creature in the corner was a {adj2}, {adj3} thing with {num2} arms and {num3} legs. {name1} made the realization that the {color4} moss was actually this creature's fur. The creature let out a {adj4} {noise} and hurried towards {name1}.

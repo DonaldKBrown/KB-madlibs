@@ -1,0 +1,24 @@
+Traveller's Journal Pt. 1
+###~~~###
+Sci-fi
+No Man's Sky
+###~~~###
+adj1=Adjective
+color1=Color
+species=Species of Alien
+num1=Number
+num2=Another Number
+adj2=Adjective
+adj3=Adjective
+planet=Silly Planet Name
+color2=Another Color
+color3=Another Color
+num3=Another Number
+water=Body of Water
+house=Type of Home
+storm=Type of Storm
+face=Part of Face/Head
+###~~~###
+Finally, the dizzying lights of hyperspace faded and I snapped into a system with a {adj1}, {color1} star in front of me. My scanner indicated the system was primarily inhabited by {species} and that there were {num1} planets orbiting this star. The largest one had {num2} moons around it, and was registering as having a {adj2}, {adj3} atmosphere. I decided to switch on my pulse engines and head in that direction.
+Immediately upon landing, my ship's computer informed me that the Sentinels had designated this planet as {planet}. I'll never understand how they come up with those names, so I typed in a new name and uploaded it to the galactic database: Paradise. All around me, waves of {color2} and {color3} grass swayed in the wind. A small, {num3}-legged creature skittered past and dove into a small {water}. The atmosphere levels even allowed me to remove my Exosuit's helmet and take a breath of fresh air. This will be my corner of the galaxy, I decide.
+Unfortunately, Paradise turned out to be quite the opposite. Shortly after I built myself a small {house} to settle down in, thunder rumbled in the distance. My computer warned me of an incoming {storm}. I ran into my base to wait it out, but not before a few fat drops of water got me and burned my {face}. To make matters worse, my presence seemed to have angered the Sentinels, and they began firing at me. Once the storm passed, I would have to find somewhere new.

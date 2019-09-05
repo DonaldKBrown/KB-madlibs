@@ -1,0 +1,15 @@
+A Hot Day
+###~~~###
+Funny
+Life
+Realistic
+###~~~###
+adj1=Adjective
+name=Girl's Name
+bvg1=Beverage
+bvg2=Another Beverage
+adj2=Adjective
+ptverb=Past-Tense Verb
+###~~~###
+It was a {adj1} day, and {name} decided to set-up a stand to make some money. She decided on selling {bvg1} and {bvg2} to help people cool off.
+However, {name} didn't know how to make {bvg1} *or* {bvg2}. As a result, it was **{adj2}**. Nobody {ptverb} any of it.
