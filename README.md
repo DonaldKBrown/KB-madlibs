@@ -31,7 +31,6 @@ Libs need to be formatted a specific way in order to be parsed correctly. Lookin
     - Keys must contain only letters, numbers, and underscores and must start with a letter.
   - Body
 - Sections must be separated by the string `###~~~###`
-- Body cannot contain any malicious HTML/Javascript. I'll check through each submission before a pull request is approved.
 - Content cannot be overly offensive. I'm pretty lenient, but just keep in mind that kids/teenagers/your grandmother might be reading it.
 
 Example Lib:
