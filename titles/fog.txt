@@ -37,7 +37,6 @@ num2=Number
 num3=Number
 adj4=Adjective
 noise=Animal Sound
-num4=Number
 ###~~~###
 A thick, {color1} fog had settled in around the town of {city}. As {name1} got into his car, he turned on his {plur1} and adjusted his {plur2} so that he could see. He thought to himself that the fog was too thick for an average {month} here, but he chocked it up to regular old global warming. He pulled out of his driveway and headed down {strt} to his girlfriend {name2}'s house.
 As he drove, the fog got thicker and more {color1} than ever before. After not even a {dist}, he had to pull over and get out. The fog was so thick now that he couldn't even see his {veh} right in front of him. He pulled out his cell-phone and turned on the {noun1}. The light refracted all around with the fog, making it even harder to see. He couldn't hear any other {plur3} on the road, so he began to {verb1} back in the direction he believed he came from.
