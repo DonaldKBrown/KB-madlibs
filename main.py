@@ -74,7 +74,7 @@ for title in titles:
         title,
         titles[title]['title'],
         len(titles[title]['keys']),
-        ', '.join(titles['title']['categories'])
+        ', '.join(titles[title]['categories'])
     ])
 titles_table = AsciiTable(titles_table_data)
 titles_table.inner_row_border = True
