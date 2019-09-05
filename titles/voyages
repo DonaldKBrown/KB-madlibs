@@ -1,0 +1,29 @@
+Voyages in Time
+###~~~###
+Dr. Who
+Sci-Fi
+###~~~###
+pln1=Plural Noun
+num1=Number
+plc1=A Place
+noun1=Noun
+clr1=Color
+pln2=Plural Noun
+slywrd1=Silly Word
+num2=Number
+num3=Number
+adj1=Adjective
+num4=Number
+pln3=Plural Noun
+vrb1=Verb
+adj2=Adjective
+ldy1=Person in Room (Female)
+slywrd2=Silly Word
+ptvrb1=Past-tense Verb
+plc2=A Place
+###~~~###
+The Doctor has visited many {pln1} of Earth history. Here are some excerpts from his {num1}-Year Diary:
+
+- Year unknown, {plc1}. I don't remember seeing a {noun1} this color last time I was here. Were they always {clr1}? And the {pln2}, they remind me of {slywrd1}. No wonder I only visit once every {num2} years.
+- New York, year {num3}. Ah, it's always {adj1} to be back in New York. Of all the Yorks, I would rank this number {num4}. I especially like the way the {pln3} {vrb1} after a long, {adj2} day.
+- Once again I arrive in the court of Queen {ldy1}, or the {slywrd2} as she is sometimes known. Although it seems that we may have {ptvrb1} during my last visit, it is always good to be back in the {plc2}.
