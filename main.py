@@ -77,7 +77,7 @@ help_data = [
     ['!categories', 'List available categories and their title counts'],
     ['!games', 'List all games you are involved in.'],
     ['!status <gameid>', 'List a game\'s current status.\nFinished games reprint final result.'],
-    ['!submit <gameid> <word>', 'Submit the word as the next key to the given game.']
+    ['!submit <gameid> <word>', 'Submit the word as the next key to the given game.\nOmitting <gameid> submits for your most recent active game.']
 ]
 help_table = AsciiTable(help_data)
 help_table.inner_row_border = True
@@ -160,6 +160,13 @@ def list_games(sender):
         games_table = AsciiTable(games_table_data)
         games_table.inner_row_border = True
         return f"```{games_table.table}```"
+
+def get_last_active(user):
+    conn = sqlite3.connect(database_path)
+    cur = conn.cursor()
+    matched_game = cur.execute('SELECT * FROM games WHERE status = "active" AND user = ? ORDER BY id DESC', [user]).fetchone()
+    conn.close()
+    return matched_game
 
 def final_results(gameid):
     conn = sqlite3.connect(database_path)
@@ -264,32 +271,36 @@ class Handler:
                 elif matched_game[2] == 'completed':
                     await bot.chat.send(channel.replyable_dict(), final_results(body[1]))
             elif body[0].lower() == '!submit':
-                if len(body) < 3:
-                    await bot.chat.send(channel.replyable_dict(), 'You must provide a game ID and the planned submission text.')
+                if len(body) < 2:
+                    await bot.chat.send(channel.replyable_dict(), 'You must provide at least the planned submission text.')
                     return None
                 matched_game = owns_game(sender, body[1])
+                s = 2
                 if not matched_game:
-                    await bot.chat.send(channel.replyable_dict(), 'This is not your game. Use `!games` to see your games.')
-                    return None
+                    matched_game = get_last_active(sender)
+                    s = 1
+                    if not matched_game:
+                        await bot.chat.send(channel.replyable_dict(), 'Could not find an active game for this submission. Use `!games` to see your games.')
+                        return None
                 if matched_game[2] != 'active':
                     await bot.chat.send(channel.replyable_dict(), 'That game is not currently active.')
                     return None
                 conn = sqlite3.connect(database_path)
                 cur = conn.cursor()
-                submitted_text = ' '.join(body[2:])
+                submitted_text = ' '.join(body[s:])
                 key_name = titles[matched_game[7]]['keys'][matched_game[3]]['KeyName']
-                cur.execute('INSERT INTO submissions (game_id, key, content) VALUES (?, ?, ?)', [body[1], key_name, submitted_text])
+                cur.execute('INSERT INTO submissions (game_id, key, content) VALUES (?, ?, ?)', [matched_game[0], key_name, submitted_text])
                 conn.commit()
                 next_key = matched_game[3] + 1
                 if next_key == matched_game[4]:
                     await bot.chat.send(channel.replyable_dict(), 'You finished! Wait while I get your final results...')
-                    cur.execute('UPDATE games SET status = "completed", submitted = ? WHERE id = ?', [next_key, body[1]])
+                    cur.execute('UPDATE games SET status = "completed", submitted = ? WHERE id = ?', [next_key, matched_game[0]])
                     conn.commit()
                     conn.close()
-                    await bot.chat.send(channel.replyable_dict(), final_results(body[1]))
+                    await bot.chat.send(channel.replyable_dict(), final_results(matched_game[0]))
                     return None
                 next_prompt = titles[matched_game[7]]['keys'][next_key]['Prompt']
-                cur.execute('UPDATE games SET submitted =? WHERE id = ?', [next_key, body[1]])
+                cur.execute('UPDATE games SET submitted =? WHERE id = ?', [next_key, matched_game[0]])
                 conn.commit()
                 conn.close()
                 await bot.chat.send(channel.replyable_dict(), f'Got it! Your next prompt is:\n`{next_prompt}`')
