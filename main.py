@@ -152,7 +152,7 @@ def new_game(sender, category=None, gameid=None, file_=None):
             )
         conn.commit()
         gameid = cur.execute(
-            'SELECT * FROM games WHERE user = ? AND status = "pending" ORDER BY id DESC',
+            'SELECT * FROM games WHERE user = ? ORDER BY id DESC',
             [sender]
         ).fetchone()[0]
     else:
