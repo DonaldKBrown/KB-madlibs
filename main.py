@@ -33,12 +33,14 @@ for file_ in files:
     with open(file_path) as f:
         file_contents = f.read().split('###~~~###')
     title = file_contents[0].strip('\n')
+    title_categories = []
     for category in file_contents[1].split('\n'):
         if len(category) < 3:
             continue
         if category.strip().upper() not in categories:
             categories[category.strip().upper()] = []
         categories[category.strip().upper()].append(file_)
+        title_categories.append(category.strip().upper())
     keys = []
     for key_ in file_contents[2].split('\n'):
         key = key_.split('=')
@@ -52,6 +54,7 @@ for file_ in files:
     titles[file_] = {
         'title' : title,
         'keys' : keys,
+        'categories' : title_categories,
         'content' : text
     }
 
@@ -65,6 +68,21 @@ category_msg = f"""```
 {category_table.table}
 ```"""
 
+titles_table_data = [['File Name', 'Title', 'Replacements', 'Categories']]
+for title in titles:
+    titles_table_data.append([
+        title,
+        titles[title]['title'],
+        len(titles[title]['keys']),
+        ', '.join(titles['title']['categories'])
+    ])
+titles_table = AsciiTable(titles_table_data)
+titles_table.inner_row_border = True
+titles_table.justify_columns[3] = 'right'
+titles_msg = f"""```
+{titles_table.table}
+```"""
+
 help_data = [
     ['Command', 'Info'],
     ['!help', 'Print this message'],
@@ -75,6 +93,8 @@ help_data = [
 \ngiven game. Only works on pending games.'],
     ['!cancel <gameid>', 'Ends/declines the given game.'],
     ['!categories', 'List available categories and their title counts'],
+    ['!titles', 'List all titles and their categories.'],
+    ['!start <file_name>', 'Start a game using the given file name, obtained through !titles.'],
     ['!games', 'List all games you are involved in.'],
     ['!status <gameid>', 'List a game\'s current status.\nFinished games reprint final result.'],
     ['!submit <gameid> <word>', 'Submit the word as the next key to the given game.\nOmitting <gameid> submits for your most recent active game.']
@@ -87,17 +107,32 @@ help_msg = f"""```
 
 game_msg = """Your game:
     ID: {gameid}
-    Category: {category}
+    Categories: {category}
     Title: {title} (from file `{file}`)
 To accept, type `!accept {gameid}`. To select a different title, type `!shuffle {gameid}`. To decline and cancel this game entirely, type `!cancel {gameid}`."""
 
-def new_game(sender, category=None, gameid=None):
-    random = False
-    if not category:
-        category = choice(list(categories.keys()))
-        random = True
-    file_ = choice(categories[category])
-    title = titles[file_]
+selected_game_msg = """Your game:
+    ID: {gameid}
+    Categories: {category}
+    Title: {title} (from file `{file}`)
+Your first prompt is:
+`{prompt}`
+Type `!submit <text>` to submit your answer."""
+
+def new_game(sender, category=None, gameid=None, file_=None):
+    if not file_:
+        random = False
+        chosen = False
+        if not category:
+            category = choice(list(categories.keys()))
+            random = True
+        file_ = choice(categories[category])
+        title = titles[file_]
+    else:
+        title = titles[file_]
+        random = False
+        chosen = True
+        category = 'chosen_from_file'
     conn = sqlite3.connect(database_path)
     cur = conn.cursor()
     if not gameid:
@@ -107,9 +142,13 @@ def new_game(sender, category=None, gameid=None):
                 [sender, len(title['keys']), title['title'], file_]
             )
         else:
+            if chosen:
+                status = 'active'
+            else:
+                status = 'pending'
             cur.execute(
-                'INSERT INTO games (user, status, submitted, total, category, title, file) VALUES (?, "pending", 0, ?, ?, ?, ?)',
-                [sender, len(title['keys']), category, title['title'], file_]
+                'INSERT INTO games (user, status, submitted, total, category, title, file) VALUES (?, ?, 0, ?, ?, ?, ?)',
+                [sender, status, len(title['keys']), category, title['title'], file_]
             )
         conn.commit()
         gameid = cur.execute(
@@ -126,8 +165,10 @@ def new_game(sender, category=None, gameid=None):
     return {
         'title' : title['title'],
         'file' : file_,
-        'category' : category,
-        'gameid' : gameid
+        'category' : ', '.join(title['categories']),
+        'gameid' : gameid,
+        'chosen' : chosen,
+        'prompt' : title['keys'][0]['Prompt']
     }
 
 def owns_game(sender, game_id):
@@ -194,6 +235,17 @@ class Handler:
                 await bot.chat.send(channel.replyable_dict(), category_msg)
             elif body[0].lower() == '!games':
                 await bot.chat.send(channel.replyable_dict(), list_games(sender))
+            elif body[0].lower() == '!titles':
+                await bot.chat.send(channel.replyable_dict(), titles_msg)
+            elif body[0].lower() == '!start':
+                if len(body) != 2:
+                    await bot.chat.send(channel.replyable_dict(), 'You must provide a file name to start a game.')
+                    return None
+                if body[1].lower() not in titles:
+                    await bot.chat.send(channel.replyable_dict(), 'Could not find that file. Use `!titles` to see available files.')
+                    return None
+                game_info = new_game(sender, None, None, body[1].lower())
+                await bot.chat.send(channel.replyable_dict(), selected_game_msg.format(**game_info))
             elif body[0].lower() == '!request':
                 if len(body) < 2:
                     game_info = new_game(sender)
