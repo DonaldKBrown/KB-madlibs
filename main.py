@@ -89,7 +89,7 @@ game_msg = """Your game:
     ID: {gameid}
     Category: {category}
     Title: {title} (from file `{file}`)
-To accept, type `!accept {gameid}`. To select a different title, type `!shuffe {gameid}`. To decline and cancel this game entirely, type `!cancel {gameid}`."""
+To accept, type `!accept {gameid}`. To select a different title, type `!shuffle {gameid}`. To decline and cancel this game entirely, type `!cancel {gameid}`."""
 
 def new_game(sender, category=None, gameid=None):
     random = False
