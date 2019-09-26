@@ -24,7 +24,7 @@ Lib Format
 
 Libs need to be formatted a specific way in order to be parsed correctly. Looking through `main.py` and its code should make it pretty obvious, but not everybody can read Python. As such, here are the rules:
 
-- File must contain three sections:
+- File must contain four (4) sections:
   - Title
   - Category List
   - Key list
