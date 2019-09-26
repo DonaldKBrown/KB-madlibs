@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import os
-from pykeybasebot import Bot, ContentType, Source
+from pykeybasebot import Bot, Source
 import sqlite3
 from json import load as config_loader
 from terminaltables import AsciiTable
