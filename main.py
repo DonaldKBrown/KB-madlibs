@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import os
-from pykeybasebot import Bot, Source
+from pykeybasebot import Bot, Source, chat1
 import sqlite3
 from json import load as config_loader
 from terminaltables import AsciiTable
@@ -227,55 +227,55 @@ class Handler:
             return
         sender = event.msg.sender.username
         if event.msg.channel.name in [f"{config['bot_name']},{sender}", f"{sender},{config['bot_name']}"]:
-            channel = event.msg.channel
+            channel = chat1.ChatChannel(name=f'{config["bot_name"]},{sender}')
             body = event.msg.content.text.body.split(' ')
             if body[0].lower() == '!help':
-                await bot.chat.send(channel.replyable_dict(), help_msg)
+                await bot.chat.send(channel, help_msg)
             elif body[0].lower() == '!categories':
-                await bot.chat.send(channel.replyable_dict(), category_msg)
+                await bot.chat.send(channel, category_msg)
             elif body[0].lower() == '!games':
-                await bot.chat.send(channel.replyable_dict(), list_games(sender))
+                await bot.chat.send(channel, list_games(sender))
             elif body[0].lower() == '!titles':
-                await bot.chat.send(channel.replyable_dict(), titles_msg)
+                await bot.chat.send(channel, titles_msg)
             elif body[0].lower() == '!start':
                 if len(body) != 2:
-                    await bot.chat.send(channel.replyable_dict(), 'You must provide a file name to start a game.')
+                    await bot.chat.send(channel, 'You must provide a file name to start a game.')
                     return None
                 if body[1].lower() not in titles:
-                    await bot.chat.send(channel.replyable_dict(), 'Could not find that file. Use `!titles` to see available files.')
+                    await bot.chat.send(channel, 'Could not find that file. Use `!titles` to see available files.')
                     return None
                 game_info = new_game(sender, None, None, body[1].lower())
-                await bot.chat.send(channel.replyable_dict(), selected_game_msg.format(**game_info))
+                await bot.chat.send(channel, selected_game_msg.format(**game_info))
             elif body[0].lower() == '!request':
                 if len(body) < 2:
                     game_info = new_game(sender)
                 else:
                     category = ' '.join(body[1:]).upper()
                     if category not in categories:
-                        await bot.chat.send(channel.replyable_dict(), 'That is not a valid category.')
+                        await bot.chat.send(channel, 'That is not a valid category.')
                         return
                     game_info = new_game(sender, category)
-                await bot.chat.send(channel.replyable_dict(), game_msg.format(**game_info))
+                await bot.chat.send(channel, game_msg.format(**game_info))
             elif body[0].lower() == '!shuffle':
                 if len(body) != 2:
-                    await bot.chat.send(channel.replyable_dict(), 'You must supply exactly one game ID to shuffle (use `!games` to find pending games).')
+                    await bot.chat.send(channel, 'You must supply exactly one game ID to shuffle (use `!games` to find pending games).')
                 else:
                     matched_game = owns_game(sender, body[1])
                     if not matched_game:
-                        await bot.chat.send(channel.replyable_dict(), 'That is not your game. Use `!games` to see your games.')
+                        await bot.chat.send(channel, 'That is not your game. Use `!games` to see your games.')
                         return None
                     if matched_game[2] != 'pending':
-                        await bot.chat.send(channel.replyable_dict(), 'You cannot shuffle a non-pending game.')
+                        await bot.chat.send(channel, 'You cannot shuffle a non-pending game.')
                     else:
                         game_info = new_game(sender, matched_game[5], body[1])
-                        await bot.chat.send(channel.replyable_dict(), game_msg.format(**game_info))
+                        await bot.chat.send(channel, game_msg.format(**game_info))
             elif body[0].lower() == '!cancel':
                 if len(body) != 2:
-                    await bot.chat.send(channel.replyable_dict(), 'You must supply exactly one game ID to cancel.')
+                    await bot.chat.send(channel, 'You must supply exactly one game ID to cancel.')
                 else:
                     matched_game = owns_game(sender, body[1])
                     if not matched_game:
-                        await bot.chat.send(channel.replyable_dict(), 'This is not your game. Use `!games` to see your games.')
+                        await bot.chat.send(channel, 'This is not your game. Use `!games` to see your games.')
                     else:
                         if matched_game[2] in ['pending','active']:
                             conn = sqlite3.connect(database_path)
@@ -283,19 +283,19 @@ class Handler:
                             cur.execute('UPDATE games SET status = "canceled" WHERE id = ?', [body[1]])
                             conn.commit()
                             conn.close()
-                            await bot.chat.send(channel.replyable_dict(), f'You have canceled game ID {body[1]}.')
+                            await bot.chat.send(channel, f'You have canceled game ID {body[1]}.')
                         else:
-                            await bot.chat.send(channel.replyable_dict(), 'You cannot cancel a game that has been completed or already canceled.')
+                            await bot.chat.send(channel, 'You cannot cancel a game that has been completed or already canceled.')
             elif body[0].lower() == '!accept':
                 if len(body) != 2:
-                    await bot.chat.send(channel.replyable_dict(), 'You must supply exactly one game ID to accept.')
+                    await bot.chat.send(channel, 'You must supply exactly one game ID to accept.')
                     return None
                 matched_game = owns_game(sender, body[1])
                 if not matched_game:
-                    await bot.chat.send(channel.replyable_dict(), 'This is not your game. Use `!games` to see your games.')
+                    await bot.chat.send(channel, 'This is not your game. Use `!games` to see your games.')
                     return None
                 if matched_game[2] != 'pending':
-                    await bot.chat.send(channel.replyable_dict(), 'The given game is not pending. Use `!games` to view the status of all of your current games.')
+                    await bot.chat.send(channel, 'The given game is not pending. Use `!games` to view the status of all of your current games.')
                     return None
                 conn = sqlite3.connect(database_path)
                 cur = conn.cursor()
@@ -303,28 +303,28 @@ class Handler:
                 conn.commit()
                 conn.close()
                 first_key = titles[matched_game[7]]['keys'][0]['Prompt']
-                await bot.chat.send(channel.replyable_dict(), f'It has begun!\nType `!submit {body[1]} <your submission>` to submit your word.\nYour first prompt is: `{first_key}`')
+                await bot.chat.send(channel, f'It has begun!\nType `!submit {body[1]} <your submission>` to submit your word.\nYour first prompt is: `{first_key}`')
             elif body[0].lower() == '!status':
                 if len(body) != 2:
-                    await bot.chat.send(channel.replyable_dict(), 'You must supply exactly one game ID to get status/final results.')
+                    await bot.chat.send(channel, 'You must supply exactly one game ID to get status/final results.')
                     return None
                 matched_game = owns_game(sender, body[1])
                 if not matched_game:
-                    await bot.chat.send(channel.replyable_dict(), 'This is not your game. Use `!games` to see your games.')
+                    await bot.chat.send(channel, 'This is not your game. Use `!games` to see your games.')
                     return None
                 if matched_game[2] == 'pending':
-                    await bot.chat.send(channel.replyable_dict(), f'This game is pending.\nTitle: {matched_game[6]}\nType `!accept {body[1]}` to accept or `!shuffle {body[1]}` to choose a new title.')
+                    await bot.chat.send(channel, f'This game is pending.\nTitle: {matched_game[6]}\nType `!accept {body[1]}` to accept or `!shuffle {body[1]}` to choose a new title.')
                 elif matched_game[2] == 'canceled':
-                    await bot.chat.send(channel.replyable_dict(), 'You cancelled this game!')
+                    await bot.chat.send(channel, 'You cancelled this game!')
                 elif matched_game[2] == 'active':
                     current_prompt = titles[matched_game[7]]['keys'][matched_game[3]]['Prompt']
                     title = matched_game[6]
-                    await bot.chat.send(channel.replyable_dict(), f'Title: {title}\nCurrent Prompt: {current_prompt}')
+                    await bot.chat.send(channel, f'Title: {title}\nCurrent Prompt: {current_prompt}')
                 elif matched_game[2] == 'completed':
-                    await bot.chat.send(channel.replyable_dict(), final_results(body[1]))
+                    await bot.chat.send(channel, final_results(body[1]))
             elif body[0].lower() == '!submit':
                 if len(body) < 2:
-                    await bot.chat.send(channel.replyable_dict(), 'You must provide at least the planned submission text.')
+                    await bot.chat.send(channel, 'You must provide at least the planned submission text.')
                     return None
                 matched_game = owns_game(sender, body[1])
                 s = 2
@@ -332,10 +332,10 @@ class Handler:
                     matched_game = get_last_active(sender)
                     s = 1
                     if not matched_game:
-                        await bot.chat.send(channel.replyable_dict(), 'Could not find an active game for this submission. Use `!games` to see your games.')
+                        await bot.chat.send(channel, 'Could not find an active game for this submission. Use `!games` to see your games.')
                         return None
                 if matched_game[2] != 'active':
-                    await bot.chat.send(channel.replyable_dict(), 'That game is not currently active.')
+                    await bot.chat.send(channel, 'That game is not currently active.')
                     return None
                 conn = sqlite3.connect(database_path)
                 cur = conn.cursor()
@@ -345,17 +345,17 @@ class Handler:
                 conn.commit()
                 next_key = matched_game[3] + 1
                 if next_key == matched_game[4]:
-                    await bot.chat.send(channel.replyable_dict(), 'You finished! Wait while I get your final results...')
+                    await bot.chat.send(channel, 'You finished! Wait while I get your final results...')
                     cur.execute('UPDATE games SET status = "completed", submitted = ? WHERE id = ?', [next_key, matched_game[0]])
                     conn.commit()
                     conn.close()
-                    await bot.chat.send(channel.replyable_dict(), final_results(matched_game[0]))
+                    await bot.chat.send(channel, final_results(matched_game[0]))
                     return None
                 next_prompt = titles[matched_game[7]]['keys'][next_key]['Prompt']
                 cur.execute('UPDATE games SET submitted =? WHERE id = ?', [next_key, matched_game[0]])
                 conn.commit()
                 conn.close()
-                await bot.chat.send(channel.replyable_dict(), f'Got it! Your next prompt is:\n`{next_prompt}`')
+                await bot.chat.send(channel, f'Got it! Your next prompt is:\n`{next_prompt}`')
         return
 
 listen_options = {
