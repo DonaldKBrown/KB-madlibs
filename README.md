@@ -2,7 +2,7 @@ MadBot
 ==
 
 This project is for a [Keybase](https://keybase.io) chat-bot that plays a silly word game with users. It's pretty simple and only responds to direct messages, so the bot running this service can be added to any [Keybase Team](https://keybase.io/popular-teams) without issue of it r
-esponding/reacting out of context. This was based loosely off an old [project of mine](https://github.com/DonaldKBrown/PyLibs), but was improved to be a chat bot instead. Easy-peasy.
+esponding/reacting out of context. This was based loosely off an old project of mine, but was improved to be a chat bot instead. Easy-peasy.
 
 Set-Up
 --
